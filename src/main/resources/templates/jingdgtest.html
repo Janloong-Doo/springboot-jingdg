@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+方法名 :<input type="text" id="t1">
+<br>
+参数内容： <input type="text" id="t2">
+<input type="button" id="bt" value="提交" onclick="abc();">
+</body>
+<script src="../assets/libs/jquery/1.11.0/jquery.js"></script>
+<script type="text/javascript">
+    function abc() {
+        var t11 = $('#t1').val();
+        var t22 = $('#t2').val();
+        var a = t22;
+//        var a= {"fields":"name"};
+        $.get("",
+            {enumMethod: t11, data: a}, function
+                (data) {
+                alert(data);
+                var da = JSON.parse(data).data;
+                alert(da);
+            }, function () {
+                alert("0000");
+            })
+    }
+</script>
+</html>
