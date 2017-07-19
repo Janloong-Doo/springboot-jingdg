@@ -1,26 +1,40 @@
 package com.janloong.jingdg.controller.jingdg;
 
 import com.alibaba.fastjson.JSONObject;
-import com.janloong.jingdg.controller.utils.ResponseResult;
-import com.janloong.jingdg.controller.utils.ReturnCode;
+import com.janloong.jingdg.domain.SystemCategoryAttr;
+import com.janloong.jingdg.service.SystemCategoryAttrValuesService;
+import com.janloong.jingdg.utils.ResponseResult;
+import com.janloong.jingdg.utils.ReturnCode;
+import com.janloong.jingdg.domain.SystemCategory;
+import com.janloong.jingdg.service.SystemCategoryAttrService;
+import com.janloong.jingdg.service.SystemCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.sword.lang.HttpUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * @author Janloong
  * @create 2017-07-12 上午9:36
  **/
-@Controller
+@RestController
 @RequestMapping("/jingdg")
 public class JdCallBackController {
     private static final Logger logger = LoggerFactory.getLogger(JdCallBackController.class);
+
+    @Resource
+    private SystemCategoryService systemCategoryService;
+    @Resource
+    private SystemCategoryAttrService systemCategoryAttrService;
+    @Resource
+    private SystemCategoryAttrValuesService systemCategoryAttrValuesService;
 
     @ResponseBody
     @RequestMapping("/getWebCall")
@@ -177,54 +191,164 @@ public class JdCallBackController {
 
     @ResponseBody
     @RequestMapping("/getRequestBySdk")
-    public ResponseResult<String> getRequestBySdk(String data, String enumMethod) {
-        ResponseResult<String> responseResult = new ResponseResult<String>();
+    public ResponseResult<Integer> getRequestBySdk(String data, String enumMethod) {
+        ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
         try {
+            int i = -1;
             JdRequestManager jdRequestManager = new JdRequestManager();
-            String result = jdRequestManager.getRequestByJdSdk(data, enumMethod);
+            JSONObject result = jdRequestManager.getRequestByJdSdk(data, enumMethod);
+            logger.info("\n请求测试-JdCallBackController-getRequestBySdk：" + "\n" +
+                    "result:" + result + "\n" +
+                    "data:" + data + "\n" +
+                    "enumMethod:" + enumMethod + "\n"
+            );
             //
-            //JdMethod method = JdMethod.valueOf(enumMethod);
-            //switch (method) {
-            //    case FINDATTRBYID:
-            //        CategoryReadFindAttrByIdRequest findAttrByIdRequest = JSONObject.parseObject(data, CategoryReadFindAttrByIdRequest.class);
-            //        String requestBySDK = jdRequestManager.getRequestBySDK();
-            //        break;
-            //    case FINDATTRBYIDJOS:
-            //        break;
-            //    case WARE:
-            //        break;
-            //    case FINDVALUESBYID:
-            //        break;
-            //    case FINDVALUESBYIDJOS:
-            //        break;
-            //    case SEARCH:
-            //        break;
-            //    case GET:
-            //        break;
-            //    case FINDATTRSBYCATEGORYIDJOS:
-            //        break;
-            //    case FINDVALUESBYATTRIDJOS:
-            //        break;
-            //    case FINDVALUESBYATTRID:
-            //        break;
-            //    case FINDBYPID:
-            //        break;
-            //    case FINDBYID:
-            //        break;
-            //    case FINDATTRSBYCATEGORYID:
-            //        break;
-            //    default:
-            //        break;
-            //}
+            JdMethod method = JdMethod.valueOf(enumMethod);
+            switch (method) {
+                //根据父类目获取子类目
+                case FINDBYPID:
+                    i = systemCategoryService.insertListWithSystemCatergory(result, method);
+
+                    break;
+                //根据类目id获取属性列表
+                case FINDATTRSBYCATEGORYID:
+                    systemCategoryAttrService.insertSystemCatergoryAttrList(result, method);
+                    break;
+                //根据类目属性id 获取属性值列表
+                case FINDVALUESBYATTRID:
+                    systemCategoryAttrValuesService.insertSystemCatergoryAttrValues(result, method);
+                    break;
+                case FINDATTRBYID:
+
+                    break;
+                case FINDATTRBYIDJOS:
+                    break;
+                case WARE:
+                    break;
+                case FINDVALUESBYID:
+                    break;
+                case FINDVALUESBYIDJOS:
+                    break;
+                case GET:
+                    break;
+                case FINDATTRSBYCATEGORYIDJOS:
+                    break;
+                case FINDVALUESBYATTRIDJOS:
+                    break;
+                case FINDBYID:
+                    break;
+                default:
+                    break;
+            }
 
 
             responseResult.setCode(0);
-            responseResult.setData(result);
+            responseResult.setData(i);
             responseResult.setMessage(ReturnCode.getMsg(0));
         } catch (Exception e) {
             responseResult.setCode(-1);
             responseResult.setMessage(ReturnCode.getMsg(1));
             logger.error("[JdCallBackController]-[getRequestBySdk],错误信息：" + e.getMessage());
+        }
+        return responseResult;
+    }
+
+    /**
+     * des: 抓取京东类目数据工具
+     *
+     * @author Janloong
+     * @create 17-7-18 下午6:26
+     **/
+    @ResponseBody
+    @RequestMapping("/getjingdgCategory")
+    public ResponseResult<Integer> getjingdgCategory() {
+        ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
+        try {
+
+            for (int j = 1; j < 3; j++) {
+                List<SystemCategory> idByCategortLev = systemCategoryService.getIdByCategortLev(j);
+                //获取每个一级类目的id值
+                idByCategortLev.forEach((k) -> {
+                    Long id = k.getId();
+                    String data = "{\"parentCid\":\"" + id + "\",\"field\":\"\"}";
+                    String enumMethod = "FINDBYPID";
+                    getRequestBySdk(data, enumMethod);
+                    logger.info("当前类目等级: " + k.getLev() + "----------" + k.getName() + "/" + idByCategortLev.size() +
+                            "---------------");
+                });
+            }
+            responseResult.setCode(0);
+            responseResult.setData(null);
+            responseResult.setMessage(ReturnCode.getMsg(0));
+        } catch (Exception e) {
+            responseResult.setCode(-1);
+            responseResult.setMessage(ReturnCode.getMsg(1));
+            logger.error("[JdCallBackController]-[getjingdgCategory],错误信息：" + e.getMessage());
+        }
+        return responseResult;
+    }
+
+    /**
+     * des: 获取类目属性列表
+     *
+     * @author Janloong
+     * @create 17-7-19 下午12:12
+     **/
+    @ResponseBody
+    @RequestMapping("/getCategoryAttr")
+    public ResponseResult<Integer> getCategoryAttr() {
+        ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
+        try {
+            List<SystemCategory> idByCategortLev = systemCategoryService.getIdByCategortLev(3);
+
+            idByCategortLev.forEach(k -> {
+                Long id = k.getId();
+                String data = "{\"cid\":\"" + id + "\",\"field\":\"\",\"attributeType\":\"\"}";
+                String enumMethod = "FINDATTRSBYCATEGORYID";
+                getRequestBySdk(data, enumMethod);
+                logger.info("当前类目等级: " + k.getLev() + "----------" + k.getName() + "/" + idByCategortLev.size() +
+                        "---------------");
+            });
+            responseResult.setCode(0);
+            responseResult.setData(null);
+            responseResult.setMessage(ReturnCode.getMsg(0));
+        } catch (Exception e) {
+            responseResult.setCode(-1);
+            responseResult.setMessage(ReturnCode.getMsg(1));
+            logger.error("[JdCallBackController]-[getCategoryAttr],错误信息：" + e.getMessage());
+        }
+        return responseResult;
+    }
+
+    /**
+     * des: 获取京东类目属性值选项
+     *
+     * @author Janloong
+     * @create 17-7-19 下午2:36
+     **/
+    @ResponseBody
+    @RequestMapping("/getCategoryAttrValues")
+    public ResponseResult<Integer> getCategoryAttrValues() {
+        ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
+        try {
+            //获取属性列表
+            List<SystemCategoryAttr> categoryAttrList = systemCategoryAttrService.getCategoryAttrList();
+
+            categoryAttrList.forEach(k -> {
+                Long categoryAttrId = k.getCategoryAttrId();
+                String data = "{\"categoryAttrId\":\"" + categoryAttrId + "\",\"field\":\"\"}";
+                String enumMethod = "FINDVALUESBYATTRID";
+                 getRequestBySdk(data, enumMethod);
+                logger.info("当前属性id: " + k.getAttrId() + "----------" + k.getAttName() + "/" + categoryAttrList.size() +
+                        "---------------");
+            });
+            responseResult.setCode(0);
+            responseResult.setData(null);
+            responseResult.setMessage(ReturnCode.getMsg(0));
+        } catch (Exception e) {
+            responseResult.setCode(-1);
+            responseResult.setMessage(ReturnCode.getMsg(1));
+            logger.error("[JdCallBackController]-[getCategoryAttrValues],错误信息：" + e.getMessage());
         }
         return responseResult;
     }

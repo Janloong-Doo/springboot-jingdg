@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.janloong.jingdg.dao.SystemCategoryDao">
+    <!--auto generated Code-->
+
+    <resultMap id="systemCategoryMap" type="com.janloong.jingdg.domain.SystemCategory">
+        <result column="cid" property="cid"/>
+        <result column="fid" property="fid"/>
+        <result column="id" property="id"/>
+        <result column="lev" property="lev"/>
+        <result column="name" property="name"/>
+        <result column="order" property="order"/>
+        <result column="features_all" property="featuresAll"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        `cid`,
+        `fid`,
+        `id`,
+        `lev`,
+        `name`,
+        `order`,
+        `features_all`
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="pojo.cid">
+        INSERT INTO system_category (
+            `cid`,
+            `fid`,
+            `id`,
+            `lev`,
+            `name`,
+            `order`,
+            `features_all`
+        ) VALUES (
+            #{pojo.cid},
+            #{pojo.fid},
+            #{pojo.id},
+            #{pojo.lev},
+            #{pojo.name},
+            #{pojo.order},
+            #{pojo.featuresAll}
+        )
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="pojo.cid">
+        INSERT INTO system_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.cid!=null">`cid`,</if>
+            <if test="pojo.fid!=null">`fid`,</if>
+            <if test="pojo.id!=null">`id`,</if>
+            <if test="pojo.lev!=null">`lev`,</if>
+            <if test="pojo.name!=null">`name`,</if>
+            <if test="pojo.order!=null">`order`,</if>
+            <if test="pojo.featuresAll!=null">`features_all`,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.cid!=null">#{pojo.cid},</if>
+            <if test="pojo.fid!=null">#{pojo.fid},</if>
+            <if test="pojo.id!=null">#{pojo.id},</if>
+            <if test="pojo.lev!=null">#{pojo.lev},</if>
+            <if test="pojo.name!=null">#{pojo.name},</if>
+            <if test="pojo.order!=null">#{pojo.order},</if>
+            <if test="pojo.featuresAll!=null">#{pojo.featuresAll},</if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertList">
+        INSERT INTO system_category (
+        <include refid="all_column"/>
+        )VALUES
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (
+            #{pojo.cid},
+            #{pojo.fid},
+            #{pojo.id},
+            #{pojo.lev},
+            #{pojo.name},
+            #{pojo.order},
+            #{pojo.featuresAll}
+            )
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE system_category
+        <set>
+            <if test="pojo.cid != null">`cid` = #{pojo.cid},</if>
+            <if test="pojo.fid != null">`fid` = #{pojo.fid},</if>
+            <if test="pojo.id != null">`id` = #{pojo.id},</if>
+            <if test="pojo.lev != null">`lev` = #{pojo.lev},</if>
+            <if test="pojo.name != null">`name` = #{pojo.name},</if>
+            <if test="pojo.order != null">`order` = #{pojo.order},</if>
+            <if test="pojo.featuresAll != null">`features_all` = #{pojo.featuresAll}</if>
+        </set>
+        WHERE cid = #{pojo.cid}
+    </update>
+
+    <select id="selectAll" resultMap="systemCategoryMap">
+        SELECT *
+        FROM system_category
+    </select>
+
+    <!--根据类目层级获取全部类-->
+    <select id="getIdByCategortLev" resultMap="systemCategoryMap">
+        SELECT *
+        FROM system_category
+        WHERE lev= #{lev}
+    </select>
+</mapper>
+

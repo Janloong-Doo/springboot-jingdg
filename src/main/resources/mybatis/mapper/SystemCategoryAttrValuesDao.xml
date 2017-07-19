@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.janloong.jingdg.dao.SystemCategoryAttrValuesDao">
+    <!--auto generated Code-->
+    <resultMap id="systemCategoryAttrValuesMap" type="com.janloong.jingdg.domain.SystemCategoryAttrValues">
+        <result column="value_id" property="valueId"/>
+        <result column="attribute_id" property="attributeId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="features_all" property="featuresAll"/>
+        <result column="id" property="id"/>
+        <result column="index_id" property="indexId"/>
+        <result column="value" property="value"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        `value_id`,
+        `attribute_id`,
+        `category_id`,
+        `features_all`,
+        `id`,
+        `index_id`,
+        `value`
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="pojo.valueId">
+        INSERT INTO system_category_attr_values (
+            `value_id`,
+            `attribute_id`,
+            `category_id`,
+            `features_all`,
+            `id`,
+            `index_id`,
+            `value`
+        ) VALUES (
+            #{pojo.valueId},
+            #{pojo.attributeId},
+            #{pojo.categoryId},
+            #{pojo.featuresAll},
+            #{pojo.id},
+            #{pojo.indexId},
+            #{pojo.value}
+        )
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="pojo.valueId">
+        INSERT INTO system_category_attr_values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.valueId!=null"> `value_id`,</if>
+            <if test="pojo.attributeId!=null"> `attribute_id`,</if>
+            <if test="pojo.categoryId!=null"> `category_id`,</if>
+            <if test="pojo.featuresAll!=null"> `features_all`,</if>
+            <if test="pojo.id!=null"> `id`,</if>
+            <if test="pojo.indexId!=null"> `index_id`,</if>
+            <if test="pojo.value!=null"> `value`,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.valueId!=null">#{pojo.valueId},</if>
+            <if test="pojo.attributeId!=null">#{pojo.attributeId},</if>
+            <if test="pojo.categoryId!=null">#{pojo.categoryId},</if>
+            <if test="pojo.featuresAll!=null">#{pojo.featuresAll},</if>
+            <if test="pojo.id!=null">#{pojo.id},</if>
+            <if test="pojo.indexId!=null">#{pojo.indexId},</if>
+            <if test="pojo.value!=null">#{pojo.value},</if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertList">
+        INSERT INTO system_category_attr_values (
+        <include refid="all_column"/>
+        )VALUES
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (
+            #{pojo.valueId},
+            #{pojo.attributeId},
+            #{pojo.categoryId},
+            #{pojo.featuresAll},
+            #{pojo.id},
+            #{pojo.indexId},
+            #{pojo.value}
+            )
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE system_category_attr_values
+        <set>
+            <if test="pojo.valueId != null"> `value_id` = #{pojo.valueId}, </if>
+            <if test="pojo.attributeId != null"> `attribute_id` = #{pojo.attributeId}, </if>
+            <if test="pojo.categoryId != null"> `category_id` = #{pojo.categoryId}, </if>
+            <if test="pojo.featuresAll != null"> `features_all` = #{pojo.featuresAll}, </if>
+            <if test="pojo.id != null"> `id` = #{pojo.id}, </if>
+            <if test="pojo.indexId != null"> `index_id` = #{pojo.indexId}, </if>
+            <if test="pojo.value != null"> `value` = #{pojo.value} </if>
+        </set>
+        WHERE value_id = #{pojo.valueId}
+    </update>
+</mapper>
+

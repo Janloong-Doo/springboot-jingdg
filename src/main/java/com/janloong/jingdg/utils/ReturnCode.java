@@ -1,4 +1,4 @@
-package com.janloong.jingdg.controller.utils;
+package com.janloong.jingdg.utils;
 
 import java.util.HashMap;
 import java.util.Map;

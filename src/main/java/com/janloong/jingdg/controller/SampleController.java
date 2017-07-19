@@ -1,7 +1,7 @@
 package com.janloong.jingdg.controller;
 
-import com.janloong.jingdg.controller.utils.ResponseResult;
-import com.janloong.jingdg.controller.utils.ReturnCode;
+import com.janloong.jingdg.utils.ResponseResult;
+import com.janloong.jingdg.utils.ReturnCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

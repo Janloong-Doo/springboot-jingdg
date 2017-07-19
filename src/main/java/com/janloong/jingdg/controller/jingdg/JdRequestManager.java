@@ -1,9 +1,17 @@
 package com.janloong.jingdg.controller.jingdg;
 
 import com.alibaba.fastjson.JSONObject;
+import com.janloong.jingdg.controller.utils.CategoryReadFindAttrsByCategoryIdRequest;
+import com.janloong.jingdg.controller.utils.CategoryReadFindAttrsByCategoryIdResponse;
+import com.janloong.jingdg.service.SystemCategoryService;
 import com.jd.open.api.sdk.DefaultJdClient;
 import com.jd.open.api.sdk.JdClient;
 import com.jd.open.api.sdk.JdException;
+import com.jd.open.api.sdk.domain.list.CategoryAttrReadService.CategoryAttr;
+import com.jd.open.api.sdk.domain.list.CategoryAttrReadService.CategoryAttrJos;
+import com.jd.open.api.sdk.domain.list.CategoryAttrValueReadService.CategoryAttrValue;
+import com.jd.open.api.sdk.domain.list.CategoryAttrValueReadService.CategoryAttrValueJos;
+import com.jd.open.api.sdk.domain.list.CategoryReadService.Category;
 import com.jd.open.api.sdk.request.category.CategorySearchRequest;
 import com.jd.open.api.sdk.request.list.*;
 import com.jd.open.api.sdk.request.mall.SearchWareRequest;
@@ -14,8 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sword.lang.http.HttpsUtils;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,19 +35,22 @@ import java.util.Map;
 public class JdRequestManager {
     private static final Logger logger = LoggerFactory.getLogger(JdRequestManager.class);
 
-    //private String baseUrl = "https://api.jd.com/routerjson";
-    private String baseUrl = "https://jos.jd.com/";
+    @Resource
+    private SystemCategoryService systemCategoryService;
+
+    private String baseUrl = "https://api.jd.com/routerjson";
+    //private String baseUrl = "https://jos.jd.com/";
     //private String baseUrl = "https://gw.api.360buy.com/routerjson";
     //private String baseUrl = "https://jos.360buy.com";
     //无线应用
-    //public static String appKey = "B0942000071618A57E6FEB7E2A9E6C30";
-    //public static String appSecret = "b53fbfb7b1f14005a9fea2050616d264";
-    //public static String accessToken = "fce436e5-d001-4317-94a8-d6e9b5393e11";
+    public static String appKey = "B0942000071618A57E6FEB7E2A9E6C30";
+    public static String appSecret = "b53fbfb7b1f14005a9fea2050616d264";
+    public static String accessToken = "fce436e5-d001-4317-94a8-d6e9b5393e11";
 
     //通用应用
-    public  static String appKey = "033A8DB7E2B7CFB716EC616A71DEDEE4";
-    public static String appSecret = "35581cdc43274148964d4067fc76b0c0";
-    public static String accessToken = "fce436e5-d001-4317-94a8-d6e9b5393e11";
+    //public  static String appKey = "033A8DB7E2B7CFB716EC616A71DEDEE4";
+    //public static String appSecret = "35581cdc43274148964d4067fc76b0c0";
+    //public static String accessToken = "fce436e5-d001-4317-94a8-d6e9b5393e11";
 
     private String paramsName = "360buy_param_json";
 
@@ -174,81 +187,105 @@ public class JdRequestManager {
         return result;
     }
 
-    public String getRequestByJdSdk(String data, String jdMethod) {
+    public JSONObject getRequestByJdSdk(String data, String jdMethod) {
         JdClient jdClient = new DefaultJdClient(baseUrl, accessToken, appKey, appSecret);
-        String result = null;
+        //String result = null;
+        JSONObject result = new JSONObject();
         try {
             JdMethod method = JdMethod.valueOf(jdMethod);
             switch (method) {
                 case FINDATTRBYID:
                     CategoryReadFindAttrByIdRequest findAttrByIdRequest = JSONObject.parseObject(data, CategoryReadFindAttrByIdRequest.class);
                     CategoryReadFindAttrByIdResponse execute = jdClient.execute(findAttrByIdRequest);
-                    result = JSONObject.toJSONString(execute);
+                    //result = JSONObject.toJSONString(execute);
+                    CategoryAttr categoryAttr = execute.getCategoryAttr();
+                    result.put("result", categoryAttr);
+
                     break;
                 case FINDATTRBYIDJOS:
                     CategoryReadFindAttrByIdJosRequest object = JSONObject.parseObject(data, CategoryReadFindAttrByIdJosRequest.class);
                     CategoryReadFindAttrByIdJosResponse execute1 = jdClient.execute(object);
-                    result = JSONObject.toJSONString(execute1);
+                    //result = JSONObject.toJSONString(execute1);
+                    CategoryAttrJos categoryAttr1 = execute1.getCategoryAttr();
+                    result.put("result", categoryAttr1);
+
                     break;
                 case WARE:
 
                     SearchWareRequest object10 = JSONObject.parseObject(data, SearchWareRequest.class);
                     SearchWareResponse execute11 = jdClient.execute(object10);
-                    result = JSONObject.toJSONString(execute11);
+                    //result = JSONObject.toJSONString(execute11);
+                    result.put("result", execute11);
 
                     break;
                 case FINDVALUESBYID:
                     CategoryReadFindValuesByIdRequest object4 = JSONObject.parseObject(data, CategoryReadFindValuesByIdRequest.class);
                     CategoryReadFindValuesByIdResponse execute5 = jdClient.execute(object4);
-                    result = JSONObject.toJSONString(execute5);
+                    //result = JSONObject.toJSONString(execute5);
+                    CategoryAttrValue categoryAttrValue = execute5.getCategoryAttrValue();
+                    result.put("result", categoryAttrValue);
 
                     break;
                 case FINDVALUESBYIDJOS:
                     CategoryReadFindValuesByIdJosRequest object6 = JSONObject.parseObject(data, CategoryReadFindValuesByIdJosRequest.class);
                     CategoryReadFindValuesByIdJosResponse execute7 = jdClient.execute(object6);
-                    result = JSONObject.toJSONString(execute7);
+                    //result = JSONObject.toJSONString(execute7);
+                    CategoryAttrValueJos categoryAttrValue1 = execute7.getCategoryAttrValue();
+                    result.put("result", categoryAttrValue1);
 
                     break;
                 case GET:
                     CategorySearchRequest object1 = JSONObject.parseObject(data, CategorySearchRequest.class);
                     CategorySearchResponse execute2 = jdClient.execute(object1);
-                    result = JSONObject.toJSONString(execute2);
+                    //result = JSONObject.toJSONString(execute2);
+                    result.put("result", execute2);
 
                     break;
                 case FINDATTRSBYCATEGORYIDJOS:
                     CategoryReadFindAttrsByCategoryIdJosRequest object7 = JSONObject.parseObject(data, CategoryReadFindAttrsByCategoryIdJosRequest.class);
                     CategoryReadFindAttrsByCategoryIdJosResponse execute8 = jdClient.execute(object7);
-                    result = JSONObject.toJSONString(execute8);
+                    //result = JSONObject.toJSONString(execute8);
+                    List<CategoryAttrJos> categoryAttrs1 = execute8.getCategoryAttrs();
+                    result.put("result", categoryAttrs1);
 
                     break;
                 case FINDVALUESBYATTRIDJOS:
                     CategoryReadFindValuesByAttrIdJosRequest object8 = JSONObject.parseObject(data, CategoryReadFindValuesByAttrIdJosRequest.class);
                     CategoryReadFindValuesByAttrIdJosResponse execute9 = jdClient.execute(object8);
-                    result = JSONObject.toJSONString(execute9);
+                    //result = JSONObject.toJSONString(execute9);
+                    List<CategoryAttrValueJos> categoryAttrValues1 = execute9.getCategoryAttrValues();
+                    result.put("result", categoryAttrValues1);
 
                     break;
                 case FINDVALUESBYATTRID:
                     CategoryReadFindValuesByAttrIdRequest object2 = JSONObject.parseObject(data, CategoryReadFindValuesByAttrIdRequest.class);
                     CategoryReadFindValuesByAttrIdResponse execute3 = jdClient.execute(object2);
-                    result = JSONObject.toJSONString(execute3);
+                    //result = JSONObject.toJSONString(execute3);
+                    List<CategoryAttrValue> categoryAttrValues = execute3.getCategoryAttrValues();
+                    result.put("result", categoryAttrValues);
                     break;
                 case FINDBYPID:
                     CategoryReadFindByPIdRequest object5 = JSONObject.parseObject(data, CategoryReadFindByPIdRequest.class);
                     CategoryReadFindByPIdResponse execute6 = jdClient.execute(object5);
-                    result = JSONObject.toJSONString(execute6);
-
+                    List<Category> categories = execute6.getCategories();
+                    //JSONObject result = new JSONObject();
+                    result.put("result", categories);
                     break;
                 case FINDBYID:
                     CategoryReadFindByIdRequest object9 = JSONObject.parseObject(data, CategoryReadFindByIdRequest.class);
                     CategoryReadFindByIdResponse execute10 = jdClient.execute(object9);
-                    result = JSONObject.toJSONString(execute10);
-
+                    Category category = execute10.getCategory();
+                    //JSONObject result = new JSONObject();
+                    result.put("result", category);
                     break;
                 case FINDATTRSBYCATEGORYID:
-                    CategoryReadFindAttrsByCategoryIdRequest object3 = JSONObject.parseObject(data, CategoryReadFindAttrsByCategoryIdRequest.class);
+                    CategoryReadFindAttrsByCategoryIdRequest object3 = JSONObject.parseObject(data,
+                            CategoryReadFindAttrsByCategoryIdRequest.class);
                     CategoryReadFindAttrsByCategoryIdResponse execute4 = jdClient.execute(object3);
-                    result = JSONObject.toJSONString(execute4);
-
+                    //result = JSONObject.toJSONString(execute4);
+                    List<com.janloong.jingdg.controller.utils.CategoryAttr> categoryAttrs = execute4.getCategoryAttrs();
+                    //JSONObject result = new JSONObject();
+                    result.put("result", categoryAttrs);
                     break;
                 default:
                     break;
@@ -258,5 +295,4 @@ public class JdRequestManager {
         }
         return result;
     }
-
 }

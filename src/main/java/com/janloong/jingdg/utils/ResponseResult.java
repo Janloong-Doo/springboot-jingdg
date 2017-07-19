@@ -1,4 +1,4 @@
-package com.janloong.jingdg.controller.utils;
+package com.janloong.jingdg.utils;
 
 /**
  * <p>Description: [controller返回 json对象模型]</p>

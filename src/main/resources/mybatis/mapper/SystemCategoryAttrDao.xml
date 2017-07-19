@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.janloong.jingdg.dao.SystemCategoryAttrDao">
+    <!--auto generated Code-->
+    <resultMap id="systemCategoryAttrMap" type="com.janloong.jingdg.domain.SystemCategoryAttr">
+        <result column="attr_id" property="attrId"/>
+        <result column="category_attr_id" property="categoryAttrId"/>
+        <result column="attr_index_id" property="attrIndexId"/>
+        <result column="att_name" property="attName"/>
+        <result column="input_type" property="inputType"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="attribute_type" property="attributeType"/>
+        <result column="features_all" property="featuresAll"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        `attr_id`,
+        `category_attr_id`,
+        `attr_index_id`,
+        `att_name`,
+        `input_type`,
+        `category_id`,
+        `attribute_type`,
+        `features_all`
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="pojo.attrId">
+        INSERT INTO system_category_attr (
+            `attr_id`,
+            `category_attr_id`,
+            `attr_index_id`,
+            `att_name`,
+            `input_type`,
+            `category_id`,
+            `attribute_type`,
+            `features_all`
+        ) VALUES (
+            #{pojo.attrId},
+            #{pojo.categoryAttrId},
+            #{pojo.attrIndexId},
+            #{pojo.attName},
+            #{pojo.inputType},
+            #{pojo.categoryId},
+            #{pojo.attributeType},
+            #{pojo.featuresAll}
+        )
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="pojo.attrId">
+        INSERT INTO system_category_attr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.attrId!=null">`attr_id`,</if>
+            <if test="pojo.categoryAttrId!=null">`category_attr_id`,</if>
+            <if test="pojo.attrIndexId!=null">`attr_index_id`,</if>
+            <if test="pojo.attName!=null">`att_name`,</if>
+            <if test="pojo.inputType!=null">`input_type`,</if>
+            <if test="pojo.categoryId!=null">`category_id`,</if>
+            <if test="pojo.attributeType!=null">`attribute_type`,</if>
+            <if test="pojo.featuresAll!=null">`features_all`,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.attrId!=null">#{pojo.attrId},</if>
+            <if test="pojo.categoryAttrId!=null">#{pojo.categoryAttrId},</if>
+            <if test="pojo.attrIndexId!=null">#{pojo.attrIndexId},</if>
+            <if test="pojo.attName!=null">#{pojo.attName},</if>
+            <if test="pojo.inputType!=null">#{pojo.inputType},</if>
+            <if test="pojo.categoryId!=null">#{pojo.categoryId},</if>
+            <if test="pojo.attributeType!=null">#{pojo.attributeType},</if>
+            <if test="pojo.featuresAll!=null">#{pojo.featuresAll},</if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertList">
+        INSERT INTO system_category_attr (
+        <include refid="all_column"/>
+        )VALUES
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (
+            #{pojo.attrId},
+            #{pojo.categoryAttrId},
+            #{pojo.attrIndexId},
+            #{pojo.attName},
+            #{pojo.inputType},
+            #{pojo.categoryId},
+            #{pojo.attributeType},
+            #{pojo.featuresAll}
+            )
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE system_category_attr
+        <set>
+            <if test="pojo.attrId != null">`attr_id` = #{pojo.attrId},</if>
+            <if test="pojo.categoryAttrId != null">`category_attr_id` = #{pojo.categoryAttrId},</if>
+            <if test="pojo.attrIndexId != null">`attr_index_id` = #{pojo.attrIndexId},</if>
+            <if test="pojo.attName != null">`att_name` = #{pojo.attName},</if>
+            <if test="pojo.inputType != null">`input_type` = #{pojo.inputType},</if>
+            <if test="pojo.categoryId != null">`category_id` = #{pojo.categoryId},</if>
+            <if test="pojo.attributeType != null">`attribute_type` = #{pojo.attributeType},</if>
+            <if test="pojo.featuresAll != null">`features_all` = #{pojo.featuresAll}</if>
+        </set>
+        WHERE attr_id = #{pojo.attrId}
+    </update>
+
+    <select id="selectAll" resultMap="systemCategoryAttrMap">
+        SELECT * FROM system_category_attr;
+    </select>
+</mapper>
+
