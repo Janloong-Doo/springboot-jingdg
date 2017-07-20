@@ -53,6 +53,9 @@ public class SystemCategoryAttrService {
         List<SystemCategoryAttr> categoryList = new ArrayList<>();
         try {
             JSONArray result = object.getJSONArray("result");
+            if (result.size() < 1) {
+                return 1;
+            }
             List<CategoryAttr> categories = JSON.parseArray(result.toString(), CategoryAttr.class);
 
             //Stream<Object> stream = result.stream();
@@ -76,9 +79,10 @@ public class SystemCategoryAttrService {
                     builder.append(v.getAttrValueFeatureValue());
                     if (!StringUtils.isEmpty(v.getAttrValueFeatureCn())) {
                         builder.append(":");
+                        builder.append("cn-");
                         builder.append(v.getAttrValueFeatureCn());
                     }
-                    builder.append(":");
+                    builder.append(",");
                 });
                 systemCategoryAttr.setFeaturesAll(builder.toString().substring(0, builder.length() - 1));
                 categoryList.add(systemCategoryAttr);
@@ -91,7 +95,7 @@ public class SystemCategoryAttrService {
             //return 1;
             return systemCategoryAttrDao.insertList(categoryList);
         } catch (Exception e) {
-            logger.error("插入错误:", categoryList.size());
+            logger.error("插入错误:" + categoryList.size() + "----" + e.getMessage());
             e.printStackTrace();
         }
         return -1;

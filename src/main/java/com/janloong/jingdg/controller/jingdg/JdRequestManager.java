@@ -3,6 +3,8 @@ package com.janloong.jingdg.controller.jingdg;
 import com.alibaba.fastjson.JSONObject;
 import com.janloong.jingdg.controller.utils.CategoryReadFindAttrsByCategoryIdRequest;
 import com.janloong.jingdg.controller.utils.CategoryReadFindAttrsByCategoryIdResponse;
+import com.janloong.jingdg.controller.utils.CategoryReadFindValuesByAttrIdRequest;
+import com.janloong.jingdg.controller.utils.CategoryReadFindValuesByAttrIdResponse;
 import com.janloong.jingdg.service.SystemCategoryService;
 import com.jd.open.api.sdk.DefaultJdClient;
 import com.jd.open.api.sdk.JdClient;
@@ -257,11 +259,11 @@ public class JdRequestManager {
                     result.put("result", categoryAttrValues1);
 
                     break;
-                case FINDVALUESBYATTRID:
+                case FINDVALUESBYATTRID://根据属性id 获取属性值列表
                     CategoryReadFindValuesByAttrIdRequest object2 = JSONObject.parseObject(data, CategoryReadFindValuesByAttrIdRequest.class);
                     CategoryReadFindValuesByAttrIdResponse execute3 = jdClient.execute(object2);
                     //result = JSONObject.toJSONString(execute3);
-                    List<CategoryAttrValue> categoryAttrValues = execute3.getCategoryAttrValues();
+                    List<com.janloong.jingdg.controller.utils.CategoryAttrValue> categoryAttrValues = execute3.getCategoryAttrValues();
                     result.put("result", categoryAttrValues);
                     break;
                 case FINDBYPID:

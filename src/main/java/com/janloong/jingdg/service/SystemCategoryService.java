@@ -50,6 +50,9 @@ public class SystemCategoryService {
         List<SystemCategory> categoryList = new ArrayList<>();
         try {
             JSONArray result = object.getJSONArray("result");
+            if (result.size() < 1) {
+                return 1;
+            }
             List<Category> categories = JSON.parseArray(result.toString(), Category.class);
 
             //Stream<Object> stream = result.stream();
@@ -72,16 +75,17 @@ public class SystemCategoryService {
                     builder.append(v.getFeatureValue());
                     if (!StringUtils.isEmpty(v.getFeatureCn())) {
                         builder.append(":");
+                        builder.append("cn-");
                         builder.append(v.getFeatureCn());
                     }
-                    builder.append(":");
+                    builder.append(";");
                 });
                 systemCategory.setFeaturesAll(builder.toString().substring(0, builder.length() - 1));
                 categoryList.add(systemCategory);
             });
             return systemCategoryDao.insertList(categoryList);
         } catch (Exception e) {
-            logger.error("插入错误:", categoryList.size());
+            logger.error("插入错误:" + categoryList.size() + "-----" + e.getMessage());
             e.printStackTrace();
         }
         return -1;
